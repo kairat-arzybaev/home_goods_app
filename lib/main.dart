@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_goods_app/pages/auth_page.dart';
+import 'package:home_goods_app/ui/pages/auth_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -14,12 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const AuthPage(),
+      home: AuthPage(),
     );
   }
 }

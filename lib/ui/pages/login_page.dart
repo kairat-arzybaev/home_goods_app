@@ -1,42 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:home_goods_app/widgets/my_button.dart';
-import 'package:home_goods_app/widgets/my_textfield.dart';
-import 'package:home_goods_app/widgets/square_tile.dart';
+import 'package:home_goods_app/ui/widgets/my_button.dart';
+import 'package:home_goods_app/ui/widgets/my_textfield.dart';
 
-import '../services/auth_service.dart';
-
-class RegisterPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   final Function()? onTap;
-  const RegisterPage({super.key, required this.onTap});
+  const LoginPage({super.key, required this.onTap});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final eMailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
-  void signUserUp() async {
+  void signUserIn() async {
     // show loading circle
     showDialog(
         context: context,
         builder: ((context) => const Center(
               child: CircularProgressIndicator(),
             )));
-    //  try creating user
+    //  try sign in
     try {
-      // check if password is confirmed
-      if (passwordController.text == confirmPasswordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: eMailController.text, password: passwordController.text);
-      } else {
-        // show error message, passwords dont match
-        showErrorMessage('Пароли не совпадают');
-      }
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: eMailController.text, password: passwordController.text);
 
+      // pop loading circle
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // pop loading circle
@@ -80,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 40,
               ),
               Text(
-                'Создать аккаунт',
+                'Добро пожаловать!',
                 style: TextStyle(color: Colors.grey[700], fontSize: 16),
               ),
               const SizedBox(
@@ -88,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               MyTextField(
                 controller: eMailController,
-                hintText: 'E-mail',
+                hintText: 'Электронная почта',
                 obscureText: false,
               ),
               const SizedBox(height: 10),
@@ -97,18 +89,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: 'Пароль',
                 obscureText: true,
               ),
-              const SizedBox(height: 10),
-              MyTextField(
-                controller: confirmPasswordController,
-                hintText: 'Подтвердите пароль',
-                obscureText: true,
-              ),
               const SizedBox(
-                height: 10,
+                height: 40,
               ),
               MyButton(
-                text: 'Создать',
-                onTap: signUserUp,
+                text: 'Войти в аккаунт',
+                onTap: signUserIn,
               ),
               const SizedBox(
                 height: 25,
@@ -121,13 +107,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Divider(
                         thickness: 1,
                         color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'войти с помощью',
-                        style: TextStyle(color: Colors.grey[700]),
                       ),
                     ),
                     Expanded(
@@ -145,24 +124,8 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SquareTile(
-                      onTap: () => AuthService().signInWithGoogle(),
-                      imagePath: 'lib/assets/google-logo.png'),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  SquareTile(
-                      onTap: () {}, imagePath: 'lib/assets/apple-logo.png'),
-                ],
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
                   Text(
-                    'Вы зарегистрированы?',
+                    'У Вас нет аккаунта?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(
@@ -171,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   GestureDetector(
                     onTap: widget.onTap,
                     child: const Text(
-                      'Войти в аккаунт',
+                      'Зарегистрироваться',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),

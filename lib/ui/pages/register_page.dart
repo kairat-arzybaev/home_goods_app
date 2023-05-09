@@ -1,34 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:home_goods_app/widgets/my_button.dart';
-import 'package:home_goods_app/widgets/my_textfield.dart';
+import 'package:home_goods_app/ui/widgets/my_button.dart';
+import 'package:home_goods_app/ui/widgets/my_textfield.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final eMailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  void signUserIn() async {
+  void signUserUp() async {
     // show loading circle
     showDialog(
         context: context,
         builder: ((context) => const Center(
               child: CircularProgressIndicator(),
             )));
-    //  try sign in
+    //  try creating user
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: eMailController.text, password: passwordController.text);
+      // check if password is confirmed
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: eMailController.text, password: passwordController.text);
+      } else {
+        // show error message, passwords dont match
+        showErrorMessage('Пароли не совпадают');
+      }
 
-      // pop loading circle
-      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // pop loading circle
@@ -72,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 40,
               ),
               Text(
-                'Добро пожаловать!',
+                'Создать аккаунт',
                 style: TextStyle(color: Colors.grey[700], fontSize: 16),
               ),
               const SizedBox(
@@ -80,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               MyTextField(
                 controller: eMailController,
-                hintText: 'Электронная почта',
+                hintText: 'E-mail',
                 obscureText: false,
               ),
               const SizedBox(height: 10),
@@ -89,49 +94,27 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Пароль',
                 obscureText: true,
               ),
+              const SizedBox(height: 10),
+              MyTextField(
+                controller: confirmPasswordController,
+                hintText: 'Подтвердите пароль',
+                obscureText: true,
+              ),
               const SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
-                    Text(
-                      'Забыли пароль?',
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
               MyButton(
-                text: 'Войти в аккаунт',
-                onTap: signUserIn,
+                text: 'Зарегистрироваться',
+                onTap: signUserUp,
               ),
               const SizedBox(
                 height: 25,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey[400],
                 ),
               ),
               const SizedBox(
@@ -141,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'У Вас нет аккаунта?',
+                    'Вы зарегистрированы?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(
@@ -150,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: widget.onTap,
                     child: const Text(
-                      'Зарегистрироваться',
+                      'Войти в аккаунт',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
