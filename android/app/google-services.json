@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781985007309",
+    "project_id": "home-goods-app",
+    "storage_bucket": "home-goods-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781985007309:android:7a9866d290d7b608568b84",
+        "android_client_info": {
+          "package_name": "com.example.home_goods_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781985007309-ju59rml51cb0ltgtsbvm2e2aab3ltdl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXiWQNYizS11yolP11ewbfY6T29OAXyOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781985007309-ju59rml51cb0ltgtsbvm2e2aab3ltdl3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
